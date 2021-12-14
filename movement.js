@@ -14,6 +14,9 @@ function keydown(e) {
         if(e.keyCode == 83) {
             move();
         }
+        if(e.keyCode == 69) {
+            getIn();
+        }
 }
 
 function keyup(e) {
