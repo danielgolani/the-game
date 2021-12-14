@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BabyDAO... The Game!</title>
+        <link rel="stylesheet" href="">
+        <script src="monkes.js"></script>
+        <script src="movement.js"></script>
+    </head>
+    <body>
+        <div>
+            <center>
+                <h1>BabyDAO... the game?!</h1>
+
+                <canvas id="myCanvas" width="600" height="200"></canvas>
+
+                <br>Choose your NFT:<br>
+                <img src="img/lt-dan.png" width="50" onClick="changeMonke(0);">
+                <img src="img/sherman.png" width="50" onClick="changeMonke(1);">
+                <img src="img/lachlan.png" width="50" onClick="changeMonke(2);">
+            </center>
+        </div>
+        
+        <br>
+
+        <script>
+
+            //create canvas
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            var background = "#f2e8ac";
+
+            //monke start-point
+            var x = canvas.width/2;
+            var y = canvas.height-200;
+
+            //monke movement deltas
+            var speed = 3;
+            var gravity = 2;
+            var friction = 0.9;
+            var y_v = 0;
+            var x_v = 0;
+            var monkeSize = 100;
+            var keys = {
+                right: false,
+                left: false,
+                up: false,
+            };
+
+            //draw monke
+            var currentMonke = 0;
+            var isLeft = false;
+            var imgR = new Image();
+            imgR.onload = function() {
+                ctx.drawImage(imgR, x, y, 50, 50);
+            };
+            imgR.src = monke[currentMonke].right;
+            var imgL = new Image();
+            imgL.src = monke[currentMonke].left;
+
+            //pick monke
+            function changeMonke(x){
+                imgL.src = monke[x].left;
+                imgR.src = monke[x].right;
+                background = monke[x].bg;
+            }
+
+            //move functions
+            function move() {
+               // y_v = -20;
+            }
+
+            //game loop
+            function draw() {
+                
+                //clear canvas at every interval
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = background;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                if (isLeft == false) {
+                    ctx.drawImage(imgR, x, y, monkeSize, monkeSize);
+                } else {
+                    ctx.drawImage(imgL, x, y, monkeSize, monkeSize);
+                }
+
+                // gravity
+                y += gravity;
+                y += y_v;
+                y_v *= 0.9;
+                if (y > canvas.height - monkeSize) {
+                    gravity = 0;
+                } else {
+                    gravity = 2.2;
+                }
+
+                //movement
+                if(keys.left) {
+                    x_v = -speed;
+                }
+                if(keys.right) {
+                    x_v = speed;
+                }
+                x_v *= friction;
+                x += x_v;
+
+            }
+
+            document.addEventListener("keyup",keyup);
+            document.addEventListener("keydown",keydown);
+            setInterval(draw, 10);
+
+
+        </script>
+    </body>
+</html>
