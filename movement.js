@@ -11,7 +11,7 @@ function keydown(e) {
             isLeft = false;
             keys.right = true;
         }
-        if(e.keyCode == 32) {
+        if(e.keyCode == 83) {
             move();
         }
 }

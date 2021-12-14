@@ -19,6 +19,8 @@
                 <img src="img/lt-dan.png" width="50" onClick="changeMonke(0);">
                 <img src="img/sherman.png" width="50" onClick="changeMonke(1);">
                 <img src="img/lachlan.png" width="50" onClick="changeMonke(2);">
+
+                <br><h3 style="margin-bottom:0;">Controls:</h3><br> A - go left<br>D - go right<br>S - cycle through NFTs;
             </center>
         </div>
         
@@ -68,7 +70,14 @@
 
             //move functions
             function move() {
-               // y_v = -20;
+               console.log(currentMonke);
+               if(currentMonke < monke.length - 1) {
+                    currentMonke++;
+                    changeMonke(currentMonke);
+               } else {
+                   currentMonke = 0;
+                   changeMonke(currentMonke);
+               }
             }
 
             //game loop
