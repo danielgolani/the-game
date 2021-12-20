@@ -4,16 +4,17 @@
     <head>
         <meta charset="utf-8">
         <title>BabyDAO... The Game!</title>
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="style.css">
         <script src="monkes.js"></script>
         <script src="movement.js"></script>
+        <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     </head>
     <body>
         <div>
             <center>
                 <h1>BabyDAO... the game?!</h1>
 
-                <canvas id="myCanvas" width="600" height="300"></canvas>
+                <canvas id="myCanvas" width="160" height="160"></canvas>
 
                 <br>Choose your NFT:<br>
                 <img src="img/lt-dan.png" width="50" onClick="changeMonke(0);">
@@ -21,7 +22,9 @@
                 <img src="img/lachlan.png" width="50" onClick="changeMonke(2);">
 
                 <br><h3 style="margin-bottom:0;">Controls:</h3>
-                <br> A - go left<br>D - go right<br>S - cycle through NFTs;<br>E - get in/out of the car
+                <br> WASD - Directions
+                <br><br>
+                <span id="test" />
             </center>
         </div>
         
@@ -29,31 +32,58 @@
 
         <script>
 
+            console.log(solanaWeb3);
+
+            (async () => {
+                // Connect to cluster
+                var connection = new solanaWeb3.Connection(
+                    solanaWeb3.clusterApiUrl('mainnet-beta'),
+                    'confirmed',
+                );
+
+                var wallet = solanaWeb3.Keypair.generate();
+
+                console.log(wallet);
+
+                console.log(wallet.publicKey);
+
+                let balance = await connection.getBalance(wallet.publicKey);
+                
+                console.log(balance);
+
+                document.getElementById("test").innerHTML = wallet.publicKey + ": " + balance;
+                
+            })();
+
             //create canvas
             var canvas = document.getElementById("myCanvas");
             var ctx = canvas.getContext("2d");
             var background = "#f2e8ac";
 
             //monke start-point
-            var x = canvas.width/2;
-            var y = canvas.height-200;
+            var x = 0;
+            var y = 0;
 
             //monke movement deltas
-            var speed = 3;
-            var gravity = 2;
-            var friction = 0.9;
-            var y_v = 0;
-            var x_v = 0;
-            var monkeSize = 100;
+            var speed = 1;
             var keys = {
                 right: false,
                 left: false,
                 up: false,
+                down: false,
             };
 
             //draw monke
+            var currentFrame = 0;
+            var shift = 0;
             var currentMonke = 0;
             var isLeft = false;
+            var monkeImage = new Image();
+            monkeImage.src = "img/sprites/lt-dan/ld-sprite-sheet.png";
+            var flowerGrass = new Image();
+            flowerGrass.src = "img/sprites/tiles/flower-grass.png";
+
+            //depricated
             var imgR = new Image();
             imgR.onload = function() {
                 ctx.drawImage(imgR, x, y, 50, 50);
@@ -61,23 +91,22 @@
             imgR.src = monke[currentMonke].right;
             var imgL = new Image();
             imgL.src = monke[currentMonke].left;
-
-            //draw car
-            var car = new Image();
-            car.onload = function() {
-                ctx.drawImage(car, x, y, 50, 50);
-            };
-            car.src = "img/red.png";
-
-            var car_x = 100;
-            var car_y = canvas.height - 100;
-            var inCar = false;
+            var imgU = new Image();
+            imgU.src = monke[currentMonke].up;
+            var imgD = new Image();
+            imgD.src = monke[currentMonke].down;
+            var imgD = new Image();
+            imgD.src = monke[currentMonke].down;
 
             //pick monke
             function changeMonke(x){
                 imgL.src = monke[x].left;
                 imgR.src = monke[x].right;
                 background = monke[x].bg;
+            }
+
+            function moveDown () {
+
             }
 
             //move functions
@@ -92,18 +121,8 @@
                }
             }
 
-            //detect car collision
-            function getIn () {
-
-                if (x > car_x && x < car_x + 200) {
-                    if (inCar == false) {
-                        inCar = true;
-                    } else {
-                        inCar = false;
-                    }
-                    
-                }
-            }
+            console.log(imgU);
+            console.log(imgD);
 
             //game loop
             function draw() {
@@ -115,55 +134,84 @@
                 ctx.fillStyle = background;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                //draw car
-                if (inCar == false) {
-                    speed = 3;
-                    friction = 0.9;
-                    ctx.drawImage(car, car_x, car_y, 200, 100);
-                    
-                    if (isLeft == false) {
-                        ctx.drawImage(imgR, x, y, monkeSize, monkeSize);
-                    } else {
-                        ctx.drawImage(imgL, x, y, monkeSize, monkeSize);
-                    }
-                } else {
-                    car_x = x;
-                    car_y = y;
-                    speed = 4;
-                    friction = 0.92;
-                    ctx.drawImage(car, car_x, car_y, 200, 100);
-
-                    if (isLeft == false) {
-                        ctx.drawImage(imgR, x+35, y-50, monkeSize, monkeSize);
-                    } else {
-                        ctx.drawImage(imgL, x+35, y-50, monkeSize, monkeSize);
+                //loop tiles
+                for (j=0; j<5; j++) {
+                    for (i=0; i<5; i++) {
+                        ctx.drawImage(flowerGrass, i*32, j*32);
                     }
                 }
 
-                //draw NFT
-                
-
-                // gravity
-                y += gravity;
-                y += y_v;
-                y_v *= 0.9;
-                if (y > canvas.height - monkeSize) {
-                    gravity = 0;
-                } else {
-                    gravity = 2.2;
+                //draw NFT                
+                if (orient  == 0) {
+                    //if he's walking:
+                    if (keys.left) {
+                        console.log(orient);
+                        ctx.drawImage(monkeImage, shift, 32, 32, 32, x, y, 32, 32);
+                        currentFrame++;
+                        if (currentFrame % 20 == 0) {
+                            shift+=32;
+                        }
+                        if (shift > 96) { currentFrame = 0; shift = 0; }
+                    } //if he's standing still:
+                    else {
+                        ctx.drawImage(monkeImage, 0, 32, 32, 32, x, y, 32, 32);
+                    }
+                // right
+                } else if (orient == 1) {
+                    if (keys.right) {
+                        ctx.drawImage(monkeImage, shift, 64, 32, 32, x, y, 32, 32);
+                        currentFrame++;
+                        if (currentFrame % 20 == 0) {
+                            shift+=32;
+                        }
+                        if (shift > 96) { currentFrame = 0; shift = 0; }
+                    } //if he's standing still:
+                    else {
+                        ctx.drawImage(monkeImage, 0, 64, 32, 32, x, y, 32, 32);
+                    }
+                // down
+                } else if (orient == 2) {
+                    //if he's walking:
+                    if (keys.down) {
+                        ctx.drawImage(monkeImage, shift, 0, 32, 32, x, y, 32, 32);
+                        currentFrame++;
+                        if (currentFrame % 20 == 0) {
+                            shift+=32;
+                        }
+                        if (shift > 96) { currentFrame = 0; shift = 0; }
+                    } //if he's standing still:
+                    else {
+                        ctx.drawImage(monkeImage, 0, 0, 32, 32, x, y, 32, 32);
+                    }
+                // up
+                } else if (orient == 3) {
+                    if (keys.up) {
+                        ctx.drawImage(monkeImage, shift, 96, 32, 32, x, y, 32, 32);
+                        currentFrame++;
+                        if (currentFrame % 20 == 0) {
+                            shift+=32;
+                        }
+                        if (shift > 96) { currentFrame = 0; shift = 0; }
+                    } //if he's standing still:
+                    else {
+                        ctx.drawImage(monkeImage, 0, 96, 32, 32, x, y, 32, 32);
+                    }
                 }
 
                 //movement
                 if(keys.left) {
-                    x_v = -speed;
+                    x -= speed;
                 }
                 if(keys.right) {
-                    x_v = speed;
+                    x += speed;
                 }
-                x_v *= friction;
-                x += x_v;
+                if(keys.up) {
+                    y -= speed;
+                }
+                if(keys.down) {
+                    y += speed;
+                }
 
-                // getIn();
 
             }
 

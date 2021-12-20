@@ -1,26 +1,34 @@
 
+var orient = 0;
+
 // key detection
 function keydown(e) {
-        // W
+        // A
         if(e.keyCode == 65) {
             isLeft = true;
             keys.left = true;
+            orient = 0;
         }
         // D
         if(e.keyCode == 68) {
             isLeft = false;
             keys.right = true;
+            orient = 1;
         }
+        // S
         if(e.keyCode == 83) {
-            move();
+            keys.down = true;
+            orient = 2;
         }
-        if(e.keyCode == 69) {
-            getIn();
+        // W
+        if(e.keyCode == 87) {
+            keys.up = true;
+            orient = 3;
         }
 }
 
 function keyup(e) {
-        // W
+        // A
         if(e.keyCode == 65) {
             keys.left = false;
         }
@@ -28,17 +36,10 @@ function keyup(e) {
         if(e.keyCode == 68) {
             keys.right = false;
         }
-        if(e.keyCode == 32) {
-            move();
+        if(e.keyCode == 83) {
+            keys.down = false;
         }
-}
-
-// character movement
-function moveLeft() {
-    isLeft = true;
-    x -= 5;
-}
-function moveRight() {
-    isLeft = false;
-    x += 5;
+        if(e.keyCode == 87) {
+            keys.up = false;
+        }
 }

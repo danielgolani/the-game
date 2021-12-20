@@ -1,7 +1,10 @@
 let monke = [
     {
-        "right": "img/lt-dan.png",
-        "left": "img/lt-dan-left.png",
+        "sprite-sheet": "img/sprites/lt-dan/ld-sprite-sheet.png",
+        "right": "img/sprites/lt-dan/ld-right.png",
+        "left": "img/sprites/lt-dan/ld-left.png",
+        "up": "img/sprites/lt-dan/ld-up.png",
+        "down": "img/sprites/lt-dan/ld-sprite-sheet.png",
         "bg": "#f2e8ac",
     },
     {
