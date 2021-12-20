@@ -49,6 +49,8 @@
 
                 let wallet = await window.solana.publicKey;
 
+                console.log(wallet);
+
                 //get Phantom wallet balance
                 let balance = await connection.getBalance(wallet);
                 
