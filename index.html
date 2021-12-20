@@ -41,19 +41,20 @@
                     'confirmed',
                 );
 
-                //connect to Phantom
                 window.solana.connect();
                 window.solana.request({ method: "connect" })
                 
                 window.solana.isConnected
                 window.solana.autoApproved
-                
-                // //get Phantom wallet balance
-                // let balance = await connection.getBalance(window.solana.publicKey);
-                
-                // console.log(balance);
 
-                document.getElementById("test").innerHTML = window.solana.publicKey; // + ": " + balance;
+                let wallet = await window.solana.publicKey;
+
+                //get Phantom wallet balance
+                let balance = await connection.getBalance(wallet);
+                
+                console.log(balance);
+
+                document.getElementById("test").innerHTML = window.solana.publicKey + ": " + balance;
                 
             })();
 
