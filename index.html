@@ -41,13 +41,15 @@
                     'confirmed',
                 );
 
-                var wallet = solanaWeb3.Keypair.generate();
+                //connect to Phantom
+                window.solana.connect();
+                window.solana.request({ method: "connect" })
+                
+                window.solana.isConnected
+                window.solana.autoApproved
 
-                console.log(wallet);
-
-                console.log(wallet.publicKey);
-
-                let balance = await connection.getBalance("BimQcRpPnLj562m9SEikfdJft3dHHcKN777xPfWZcD1s");
+                //get Phantom wallet balance
+                let balance = await connection.getBalance(window.solana.publicKey);
                 
                 console.log(balance);
 
