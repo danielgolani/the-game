@@ -39,7 +39,7 @@
             window.solana.request({ method: "connect" })
             
             window.solana.isConnected
-            window.solana.autoApproved
+            // window.solana.autoApproved
 
             (async () => {
                 // Connect to cluster
@@ -47,7 +47,7 @@
                     solanaWeb3.clusterApiUrl('mainnet-beta'),
                     'confirmed',
                 );
-                
+
                 //get Phantom wallet balance
                 let balance = await connection.getBalance(window.solana.publicKey);
                 
