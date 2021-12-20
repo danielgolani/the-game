@@ -34,7 +34,6 @@
 
             console.log(solanaWeb3);
 
-            (async () => {
                 // Connect to cluster
                 var connection = new solanaWeb3.Connection(
                     solanaWeb3.clusterApiUrl('mainnet-beta'),
@@ -49,13 +48,11 @@
                 window.solana.autoApproved
 
                 //get Phantom wallet balance
-                let balance = await connection.getBalance(window.solana.publicKey);
+                let balance = connection.getBalance(window.solana.publicKey);
                 
                 console.log(balance);
 
-                document.getElementById("test").innerHTML = wallet.publicKey + ": " + balance;
-                
-            })();
+                document.getElementById("test").innerHTML = window.solana.publicKey + ": " + balance;
 
             //create canvas
             var canvas = document.getElementById("myCanvas");
