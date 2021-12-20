@@ -34,13 +34,6 @@
 
             console.log(solanaWeb3);
 
-            //connect to Phantom
-            window.solana.connect();
-            window.solana.request({ method: "connect" })
-            
-            window.solana.isConnected
-            // window.solana.autoApproved
-
             (async () => {
                 // Connect to cluster
                 var connection = new solanaWeb3.Connection(
@@ -48,12 +41,19 @@
                     'confirmed',
                 );
 
-                //get Phantom wallet balance
-                let balance = await connection.getBalance(window.solana.publicKey);
+                //connect to Phantom
+                window.solana.connect();
+                window.solana.request({ method: "connect" })
                 
-                console.log(balance);
+                window.solana.isConnected
+                window.solana.autoApproved
+                
+                // //get Phantom wallet balance
+                // let balance = await connection.getBalance(window.solana.publicKey);
+                
+                // console.log(balance);
 
-                document.getElementById("test").innerHTML = window.solana.publicKey + ": " + balance;
+                // document.getElementById("test").innerHTML = window.solana.publicKey + ": " + balance;
                 
             })();
 
